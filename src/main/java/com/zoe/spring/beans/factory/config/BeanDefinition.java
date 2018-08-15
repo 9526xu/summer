@@ -1,5 +1,9 @@
 package com.zoe.spring.beans.factory.config;
 
+import com.zoe.spring.beans.PropertyValue;
+
+import java.util.List;
+
 /**
  * @author xurj@yintong.com.cn
  * @version V1.0
@@ -21,4 +25,8 @@ public interface BeanDefinition {
 	String getScope();
 
 	void setScope(String scope);
+
+	List<PropertyValue> getPropertyValues();
+
+	void addPropertyValue(PropertyValue propertyValue);
 }
