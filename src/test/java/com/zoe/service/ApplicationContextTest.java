@@ -8,7 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * @author xurj@yintong.com.cn
+ * @author andyxu
  * @version V1.0
  * @Date 2018/8/12 13:06
  * @since JDK 1.6

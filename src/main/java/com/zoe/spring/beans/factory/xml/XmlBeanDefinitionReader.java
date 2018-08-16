@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @author xurj@yintong.com.cn
+ * @author andyxu
  * @version V1.0
  * @Date 2018/8/12 12:46
  * @since JDK 1.6

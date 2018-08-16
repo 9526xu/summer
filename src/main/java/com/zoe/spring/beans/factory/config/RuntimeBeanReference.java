@@ -3,7 +3,7 @@ package com.zoe.spring.beans.factory.config;
 import lombok.Data;
 
 /**
- * @author xurj@yintong.com.cn
+ * @author andyxu
  * @version V1.0
  * @Date 2018/8/14 21:20
  * @since JDK 1.6

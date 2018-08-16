@@ -14,7 +14,7 @@ import org.junit.Test;
 import java.util.List;
 
 /**
- * @author xurj@yintong.com.cn
+ * @author andyxu
  * @version V1.0
  * @Date 2018/8/14 21:10
  * @since JDK 1.6
@@ -38,7 +38,6 @@ public class PropertyValueTest {
 		BeanDefinition bd = beanFactory.getBeanDefinition("petStore");
 
 		// 获取 PropertyValues
-
 		List<PropertyValue> PropertyValues = bd.getPropertyValues();
 
 		Assert.assertNotNull(PropertyValues);

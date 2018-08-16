@@ -6,7 +6,7 @@ import com.zoe.spring.beans.factory.config.SingletonBeanRegistry;
 import java.util.Map;
 
 /**
- * @author xurj@yintong.com.cn
+ * @author andyxu
  * @version V1.0
  * @Date 2018/8/12 15:53
  * @since JDK 1.6
