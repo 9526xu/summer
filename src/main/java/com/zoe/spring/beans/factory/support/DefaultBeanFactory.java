@@ -9,6 +9,7 @@ import com.zoe.spring.beans.factory.ConfigurableBeanFactory;
 import com.zoe.spring.beans.factory.config.BeanDefinition;
 import com.zoe.spring.beans.factory.config.support.DefaultSingletonBeanRegistry;
 import com.zoe.spring.beans.util.ClassUtils;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
@@ -55,50 +56,65 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
 		if (bd.isSingleton()) {
 			bean = getSingleton(beanId);
 			if (bean == null) {
-				bean = createBean(beanId);
+				bean = createBean(bd);
 				registerSingleton(beanId, bean);
 				return bean;
 			}
 		} else {
-			bean = createBean(beanId);
+			bean = createBean(bd);
 		}
 		return bean;
 	}
 
 
-	private Object createBean(String beanName) {
-		BeanDefinition bd = beanDefinitionMap.get(beanName);
+	private Object createBean(BeanDefinition bd) {
+		Object bean = instantiateBean(bd);
+		populateProperty(bd, bean);
+		return bean;
+	}
+
+	private Object instantiateBean(BeanDefinition bd) {
 		try {
 			Class resultClass = this.getBeanClassLoader().loadClass(bd.getBeanClassName());
 			Object object = resultClass.newInstance();
-			populateProperty(bd, object);
 			return object;
 		} catch (Exception e) {
-			throw new BeanCreationException(beanName, "creat bean is error", e);
+			throw new BeanCreationException("creat beanclass " + bd.getBeanClassName() + " is error", e);
 		}
 	}
 
 	/**
 	 * @param bd
-	 * @param object
+	 * @param bean
 	 */
-	private void populateProperty(BeanDefinition bd, Object object) {
+	private void populateProperty(BeanDefinition bd, Object bean) {
+		/**
+		 * 为什么每次实例化这两个参数
+		 */
 		BeanDefinitionValueResolver beanDefinitionValueResolver = new BeanDefinitionValueResolver(this);
+		TypeConverter typeConverter = new SimpleTypeConverter();
 		List<PropertyValue> propertyValues = bd.getPropertyValues();
+
+		if (!CollectionUtils.isEmpty(propertyValues)) {
+			return;
+		}
 		for (PropertyValue propertyValue : propertyValues) {
-			Object convertedValue = propertyValue.getConvertedValue();
-			if (convertedValue == null) {
-				convertedValue = beanDefinitionValueResolver.resolveValueIfNecessary(propertyValue.getName(), propertyValue.getValue());
-				propertyValue.setConvertedValue(convertedValue);
-			}
+			String propertyName = propertyValue.getName();
+			Object originalValue = propertyValue.getValue();
+			Object resolvedValue = beanDefinitionValueResolver.resolveValueIfNecessary(originalValue);
+//			Object convertedValue = propertyValue.getConvertedValue();
+//			if (convertedValue == null) {
+//				convertedValue = beanDefinitionValueResolver.resolveValueIfNecessary(propertyValue.getName(), propertyValue.getValue());
+//				propertyValue.setConvertedValue(convertedValue);
+//			}
 			// 转化
 			try {
-				PropertyDescriptor propDesc = new PropertyDescriptor(propertyValue.getName(), object.getClass());
+				PropertyDescriptor propDesc = new PropertyDescriptor(propertyName, bean.getClass());
 				// 获取字段实际类型
-				TypeConverter typeConverter = new SimpleTypeConverter();
-				Object realvalue = typeConverter.convertIfNecessary(convertedValue, propDesc.getPropertyType());
+
+				Object realvalue = typeConverter.convertIfNecessary(resolvedValue, propDesc.getPropertyType());
 				Method methodSet = propDesc.getWriteMethod();
-				methodSet.invoke(object, realvalue);
+				methodSet.invoke(bean, realvalue);
 			} catch (Exception e) {
 				throw new BeanCreationException("get bean property error", e);
 			}

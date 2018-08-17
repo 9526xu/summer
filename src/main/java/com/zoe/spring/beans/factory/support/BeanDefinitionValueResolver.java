@@ -21,30 +21,28 @@ public class BeanDefinitionValueResolver {
 	}
 
 	/**
-	 * @param argName 对象字段名称
-	 * @param value   propertyValue中的对象
+	 * @param value propertyValue中的对象
 	 * @return
 	 */
-	public Object resolveValueIfNecessary(String argName, Object value) {
-		Assert.notNull(argName);
+	public Object resolveValueIfNecessary(Object value) {
 		Assert.notNull(value);
 		if (value instanceof RuntimeBeanReference) {
 			RuntimeBeanReference ref = (RuntimeBeanReference) value;
-			return resolveReference(argName, ref);
+			return resolveReference(ref);
 		} else if (value instanceof TypedStringValue) {
 			TypedStringValue typedString = (TypedStringValue) value;
-			return resolveTypedString(argName, typedString);
+			return resolveTypedString(typedString);
 		} else {
 			throw new BeanDefinitionStoreException("property is error");
 		}
 
 	}
 
-	private Object resolveTypedString(String argName, TypedStringValue typedString) {
+	private Object resolveTypedString(TypedStringValue typedString) {
 		return typedString.getValue();
 	}
 
-	private Object resolveReference(String argName, RuntimeBeanReference ref) {
+	private Object resolveReference(RuntimeBeanReference ref) {
 		Assert.notNull(ref.getBeanName());
 		return beanFactory.getBean(ref.getBeanName());
 	}
