@@ -19,5 +19,7 @@ public class PetStoreService {
 
 	private String owner;
 
+	private int version;
+
 
 }

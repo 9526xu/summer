@@ -51,5 +51,6 @@ public class BeanDefinitionValueResolverTest {
 
 		Assert.assertEquals("liuxin", petStoreService.getOwner());
 
+		Assert.assertEquals(2, petStoreService.getVersion());
 	}
 }

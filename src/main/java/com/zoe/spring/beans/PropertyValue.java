@@ -10,7 +10,9 @@ public class PropertyValue {
 	private String name;
 
 	private Object value;
-
+	/**
+	 * 为什么需要存储？
+	 */
 	private Object convertedValue;
 
 	public Object getConvertedValue() {

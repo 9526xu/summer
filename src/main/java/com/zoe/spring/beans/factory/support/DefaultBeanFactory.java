@@ -2,6 +2,8 @@ package com.zoe.spring.beans.factory.support;
 
 import com.google.common.collect.Maps;
 import com.zoe.spring.beans.PropertyValue;
+import com.zoe.spring.beans.SimpleTypeConverter;
+import com.zoe.spring.beans.TypeConverter;
 import com.zoe.spring.beans.factory.BeanCreationException;
 import com.zoe.spring.beans.factory.ConfigurableBeanFactory;
 import com.zoe.spring.beans.factory.config.BeanDefinition;
@@ -92,8 +94,11 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
 			// 转化
 			try {
 				PropertyDescriptor propDesc = new PropertyDescriptor(propertyValue.getName(), object.getClass());
+				// 获取字段实际类型
+				TypeConverter typeConverter = new SimpleTypeConverter();
+				Object realvalue = typeConverter.convertIfNecessary(convertedValue, propDesc.getPropertyType());
 				Method methodSet = propDesc.getWriteMethod();
-				methodSet.invoke(object, convertedValue);
+				methodSet.invoke(object, realvalue);
 			} catch (Exception e) {
 				throw new BeanCreationException("get bean property error", e);
 			}
