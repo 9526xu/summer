@@ -7,7 +7,7 @@ import com.zoe.spring.context.ApplicationContext;
 import com.zoe.spring.core.io.Resources;
 
 /**
- * @author xurj@yintong.com.cn
+ * @author andyxu
  * @version V1.0
  * @Date 2018/8/12 15:20
  * @since JDK 1.6
