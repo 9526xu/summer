@@ -1,7 +1,7 @@
 package com.zoe.spring.beans.factory.config;
 
 /**
- * @author xurj@yintong.com.cn
+ * @author andyxu
  * @version V1.0
  * @Date 2018/8/12 15:51
  * @since JDK 1.6

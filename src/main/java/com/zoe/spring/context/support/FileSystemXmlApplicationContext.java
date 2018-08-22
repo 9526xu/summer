@@ -4,7 +4,7 @@ import com.zoe.spring.core.io.FileSystemResources;
 import com.zoe.spring.core.io.Resources;
 
 /**
- * @author xurj@yintong.com.cn
+ * @author andyxu
  * @version V1.0
  * @Date 2018/8/12 15:01
  * @since JDK 1.6
