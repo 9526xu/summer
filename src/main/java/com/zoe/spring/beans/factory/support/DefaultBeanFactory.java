@@ -9,6 +9,7 @@ import com.zoe.spring.beans.factory.ConfigurableBeanFactory;
 import com.zoe.spring.beans.factory.config.BeanDefinition;
 import com.zoe.spring.beans.factory.config.support.DefaultSingletonBeanRegistry;
 import com.zoe.spring.beans.util.ClassUtils;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.beans.PropertyDescriptor;
@@ -69,7 +70,7 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
 
 	private Object createBean(BeanDefinition bd) {
 		Object bean = instantiateBean(bd);
-		populateProperty(bd, bean);
+		populatePropertyWithCommonBeanutil(bd, bean);
 		return bean;
 	}
 
@@ -95,7 +96,7 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
 		TypeConverter typeConverter = new SimpleTypeConverter();
 		List<PropertyValue> propertyValues = bd.getPropertyValues();
 
-		if (!CollectionUtils.isEmpty(propertyValues)) {
+		if (CollectionUtils.isEmpty(propertyValues)) {
 			return;
 		}
 		for (PropertyValue propertyValue : propertyValues) {
@@ -118,6 +119,30 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
 			} catch (Exception e) {
 				throw new BeanCreationException("get bean property error", e);
 			}
+
+		}
+
+	}
+
+	private void populatePropertyWithCommonBeanutil(BeanDefinition bd, Object bean) {
+		/**
+		 * 为什么每次实例化这两个参数
+		 */
+		BeanDefinitionValueResolver beanDefinitionValueResolver = new BeanDefinitionValueResolver(this);
+		List<PropertyValue> propertyValues = bd.getPropertyValues();
+		if (CollectionUtils.isEmpty(propertyValues)) {
+			return;
+		}
+		for (PropertyValue propertyValue : propertyValues) {
+			String propertyName = propertyValue.getName();
+			Object originalValue = propertyValue.getValue();
+			Object resolvedValue = beanDefinitionValueResolver.resolveValueIfNecessary(originalValue);
+			try {
+				BeanUtils.setProperty(bean,propertyName,resolvedValue);
+			} catch (Exception e) {
+				throw new BeanCreationException("set bean property error", e);
+			}
+
 
 		}
 
